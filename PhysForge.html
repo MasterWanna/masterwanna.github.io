@@ -7,10 +7,10 @@
   <meta name="theme-color" content="#103d3b">
   <title>PhysForge — Material-Controllable 3D Reconstruction</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23103d3b'/%3E%3Cpath d='M10 25V7h14v4H14v4h8v4h-8v6z' fill='%23c8f17d'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="../assets/PhysForge/css/style.css">
-  <script defer src="../assets/PhysForge/js/site-config.js"></script>
-  <script defer src="../assets/PhysForge/js/gallery-data.js"></script>
-  <script defer src="../assets/PhysForge/js/app.js"></script>
+  <link rel="stylesheet" href="assets/PhysForge/css/style.css">
+  <script defer src="assets/PhysForge/js/site-config.js"></script>
+  <script defer src="assets/PhysForge/js/gallery-data.js"></script>
+  <script defer src="assets/PhysForge/js/app.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -36,7 +36,7 @@
     </section>
     <section class="section wrap" id="method">
       <div class="section-heading"><h2>Pipeline</h2></div>
-      <figure class="overview-figure"><button id="open-method" aria-label="Enlarge PhysForge method overview"><img src="../assets/PhysForge/figures/overview.webp" width="2400" height="1200" alt="PhysForge pipeline: material-conditioned video, PhysFit interaction-window selection, and PhysComp reconstruction and component-level physical fitting." loading="lazy"><span>Expand figure</span></button><figcaption>Given an input image and a target material description, PhysForge uses PhysFit to fit material properties from informative intervals of generated video dynamics while accounting for nonphysical motion, and PhysComp to reconstruct separable objects and semantic parts, estimate their physical properties independently, and compose them in a shared simulation.</figcaption></figure>
+      <figure class="overview-figure"><button id="open-method" aria-label="Enlarge PhysForge method overview"><img src="assets/PhysForge/figures/overview.webp" width="2400" height="1200" alt="PhysForge pipeline: material-conditioned video, PhysFit interaction-window selection, and PhysComp reconstruction and component-level physical fitting." loading="lazy"><span>Expand figure</span></button><figcaption>Given an input image and a target material description, PhysForge uses PhysFit to fit material properties from informative intervals of generated video dynamics while accounting for nonphysical motion, and PhysComp to reconstruct separable objects and semantic parts, estimate their physical properties independently, and compose them in a shared simulation.</figcaption></figure>
     </section>
 
     <section class="comparison-section" id="comparisons"><div class="wrap">
@@ -59,6 +59,6 @@
     <section class="components-section" id="components"><div class="wrap"><div class="section-heading"><h2>Component-Separable</h2></div><p class="gallery-description">PhysForge simulations of objects and semantic parts with independently estimated physical properties; observe their relative motion and contact during joint simulation.</p><div id="component-gallery" class="gallery-grid component-grid"></div><div class="more-row"><button class="button secondary" id="component-more">Show all scenes</button></div></div></section>
   </main>
   <noscript><p class="wrap">Enable JavaScript to play videos and switch materials.</p></noscript>
-  <dialog id="method-dialog" aria-label="PhysForge method overview"><button class="dialog-close" id="close-method" aria-label="Close figure">Close</button><img src="../assets/PhysForge/figures/overview.webp" alt="Enlarged PhysForge method overview"></dialog>
+  <dialog id="method-dialog" aria-label="PhysForge method overview"><button class="dialog-close" id="close-method" aria-label="Close figure">Close</button><img src="assets/PhysForge/figures/overview.webp" alt="Enlarged PhysForge method overview"></dialog>
 </body>
 </html>
