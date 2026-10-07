@@ -9,3 +9,13 @@
 @media(max-width:370px){h1{font-size:62px}.comparison-tabs button{padding:10px 7px}.comparison-tabs button>span{font-size:11px}.hero h2{font-size:23px}.material-switch button{font-size:12px}.gallery-grid{gap:12px 8px}}
 
 .card-play{position:absolute;bottom:12px;right:12px;background:#fffffff2;border:1px solid #cedddd;border-radius:25px;padding:8px 14px;font-size:12px;color:var(--forest);box-shadow:0 2px 8px #103d3b08}.card-play:hover{background:var(--forest);color:white}.result-media:has(video:not([controls])){cursor:default}
+
+/* Publication links remain neutral while the paper and code are pending. */
+.release-button{background:#e8ecee;border:1px solid #d5dcdf;color:#58676d;gap:10px;box-shadow:none}
+.release-button span{font-size:11px;font-weight:400;color:#66777e;white-space:nowrap}
+.release-button[aria-disabled="true"]{cursor:default}
+a.release-button[href]:hover{background:#dce3e6;border-color:#abb9bf;color:#34464e}
+.nav-release{color:#66777e}.nav-release span{background:#e8ecee;color:#66777e}
+.closing .release-actions{gap:12px}.closing .release-actions .button{margin-top:0}
+.closing .release-actions{margin-top:28px}
+@media(max-width:720px){.release-actions{gap:10px}.release-button{padding:12px 14px;font-size:13px}.release-button span{font-size:10px}.nav-release span{display:none}}

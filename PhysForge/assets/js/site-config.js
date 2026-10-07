@@ -1,8 +1,7 @@
-// Edit these fields when public authorship and repository links are available.
-// No build step is required; the browser reads this file directly.
+// Add the arXiv URL when it is public. No build step is required.
 window.PHYSFORGE_CONFIG = {
-  authors: [], // Example: {name: 'Author name', affiliation: 'Institution', url: 'https://...'}
+  authors: [],
   status: 'Research preview',
-  codeUrl: '',
-  paperUrl: 'PhysForge/assets/paper/physforge.pdf'
+  codeUrl: 'https://github.com/MasterWanna/PhysForge',
+  arxivUrl: ''
 };

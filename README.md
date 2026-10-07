@@ -7,7 +7,7 @@ The root home page is intentionally blank.
 
 - `index.html`: blank home page.
 - `PhysForge.html`: PhysForge project page.
-- `PhysForge/assets/`: self-contained styles, scripts, paper, figures, videos, and posters.
+- `PhysForge/assets/`: self-contained styles, scripts, figures, videos, and posters.
 - `.nojekyll`: publish the static files directly.
 
 The paper page is available at https://masterwanna.github.io/PhysForge.html.
@@ -20,7 +20,7 @@ http://localhost:8000/PhysForge.html.
 ## Editing and publishing
 
 Edit project content in `PhysForge.html`, presentation in
-`PhysForge/assets/css/style.css`, and author / release links in
+`PhysForge/assets/css/style.css`, and author / arXiv and GitHub links in
 `PhysForge/assets/js/site-config.js`. Video and material mappings are in
 `PhysForge/assets/js/gallery-data.js`.
 All asset URLs are relative to the root HTML file and begin with `PhysForge/assets/`.

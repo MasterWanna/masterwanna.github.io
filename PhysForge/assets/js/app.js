@@ -3,9 +3,9 @@ const DATA=window.PHYSFORGE_DATA, CONFIG=window.PHYSFORGE_CONFIG;
 const byKey=key=>DATA.cases.find(c=>c.key===key), $=id=>document.getElementById(id);
 const escapeHTML=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
-document.querySelectorAll('[data-paper]').forEach(a=>a.href=CONFIG.paperUrl);
+document.querySelectorAll('[data-arxiv]').forEach(a=>{if(CONFIG.arxivUrl){a.href=CONFIG.arxivUrl;a.removeAttribute('aria-disabled');a.querySelector('span').textContent='Paper';}});
+document.querySelectorAll('[data-code]').forEach(a=>a.href=CONFIG.codeUrl);
 document.querySelectorAll('[data-status]').forEach(e=>e.textContent=CONFIG.status);
-if(CONFIG.codeUrl){$('code-link').href=CONFIG.codeUrl;$('code-link').hidden=false;$('code-status').hidden=true;}
 if(CONFIG.authors.length){$('authors').replaceChildren(...CONFIG.authors.flatMap((a,i)=>{const e=document.createElement(a.url?'a':'span');e.textContent=a.name+(a.affiliation?' · '+a.affiliation:'');if(a.url)e.href=a.url;return i?[document.createTextNode(' / '),e]:[e];}));}
 let heroCase='material/001',heroKind='medium',heroGeneration=0;
 const hero=$('hero-video');
@@ -29,7 +29,7 @@ hero.addEventListener('error',()=>{$('hero-error').hidden=false;});
 setHero(heroCase,heroKind,!reducedMotion);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)document.querySelectorAll('video').forEach(v=>v.pause());});
 
-// Curated comparisons retain the original videos and a shared elapsed-time axis.
+// Curated comparisons show the first five seconds and a shared elapsed-time axis.
 let comparisonKey='material/101',comparisonKind='soft',comparisonVideos=[],comparisonGeneration=0,comparisonFrame=0;
 const descriptions={
   'material/101':'Inspect compression and rebound while retaining the apple’s appearance.',
@@ -54,7 +54,7 @@ function setComparison(key,kind){
   $('comparison-materials').innerHTML=c.conditions.length>1?c.conditions.map(x=>`<button data-kind="${x.kind}" aria-pressed="${x.kind===condition.kind}">${escapeHTML(x.label)}</button>`).join(''):'';
   $('comparison-materials').hidden=c.conditions.length<2;
   document.querySelectorAll('#comparison-tabs button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.case===key)));
-  $('comparison-grid').innerHTML=DATA.methods.map(m=>{const v=condition.videos[m.id];return `<article class="method-card ${m.id==='ours'?'ours':''}"><a class="method-name" href="${v.src}" target="_blank" rel="noopener" title="Open original ${m.name} video">${m.name}<span>${m.id==='ours'?'PhysForge':'MP4'}</span></a><video muted playsinline preload="none" src="${v.src}" poster="${v.poster}" data-duration="${v.duration}" aria-label="${escapeHTML(c.name+', '+condition.label+', '+m.name)}"></video></article>`;}).join('');
+  $('comparison-grid').innerHTML=DATA.methods.map(m=>{const v=condition.videos[m.id];return `<article class="method-card ${m.id==='ours'?'ours':''}"><a class="method-name" href="${v.src}" target="_blank" rel="noopener" title="Open ${m.name} video clip">${m.name}<span>${m.id==='ours'?'PhysForge':'MP4'}</span></a><video muted playsinline preload="none" src="${v.src}" poster="${v.poster}" data-duration="${v.duration}" aria-label="${escapeHTML(c.name+', '+condition.label+', '+m.name)}"></video></article>`;}).join('');
   comparisonVideos=[...$('comparison-grid').querySelectorAll('video')];
   $('comparison-error').hidden=true;$('comparison-speed').value='1';
   comparisonVideos.forEach(v=>{
