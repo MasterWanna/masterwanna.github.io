@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="PhysForge reconstructs material-controllable 3D assets with separable components. Explore material-dependent motion, component interactions, and selected comparisons.">
+  <meta name="theme-color" content="#103d3b">
+  <title>PhysForge — Material-Controllable 3D Reconstruction</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23103d3b'/%3E%3Cpath d='M10 25V7h14v4H14v4h8v4h-8v6z' fill='%23c8f17d'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../assets/PhysForge/css/style.css">
+  <script defer src="../assets/PhysForge/js/site-config.js"></script>
+  <script defer src="../assets/PhysForge/js/gallery-data.js"></script>
+  <script defer src="../assets/PhysForge/js/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header"><a class="wordmark" href="#top" aria-label="PhysForge home">Phys<span>Forge</span><i aria-hidden="true"></i></a><nav aria-label="Main navigation"><a href="#abstract">Abstract</a><a href="#method">Pipeline</a><a href="#comparisons">Comparisons</a><a href="#gallery">Material-Controllable</a><a href="#components">Component-Separable</a></nav></header>
+  <main id="main">
+    <section class="hero wrap" id="top">
+      <div class="hero-copy">
+        <h1>Phys<span>Forge</span></h1>
+        <h2>Material-Controllable<br>3D Reconstruction with<br>Separable Components</h2>
+        <p class="authors" id="authors">Anonymous authors</p>
+        <div class="hero-actions release-actions"><a class="button release-button" data-arxiv role="link" aria-disabled="true">arXiv <span>to be released</span></a><a class="button release-button" data-code href="https://github.com/MasterWanna/PhysForge">GitHub <span>to be released</span></a></div>
+      </div>
+      <div class="material-lab" aria-label="Interactive material explorer">
+        <div class="lab-heading"><div class="object-tabs" role="group" aria-label="Choose object"><button data-hero-object="material/001" aria-pressed="true">Chair</button><button data-hero-object="material/002" aria-pressed="false">Strawberry</button></div></div>
+        <div class="hero-stage"><video id="hero-video" muted playsinline preload="metadata" aria-label="PhysForge material simulation"></video></div><div class="single-controls"><button type="button" class="single-play" id="hero-play" aria-label="Play material simulation">Play</button><button type="button" class="single-reset" id="hero-reset" aria-label="Reset material simulation">Reset</button><output class="single-time">0.0 / 5.0 s</output><input class="single-seek" id="hero-seek" type="range" min="0" max="5" step="0.01" value="0" aria-label="Material simulation playback time"></div>
+        <div class="material-switch" id="hero-materials" role="group" aria-label="Choose material"></div>
+        <p class="media-error" id="hero-error" hidden>Playback unavailable. <a id="hero-original">Open the video</a>.</p>
+      </div>
+    </section>
+    <section class="section wrap abstract-section" id="abstract" aria-labelledby="abstract-title">
+      <div class="section-heading"><h2 id="abstract-title">Abstract</h2></div>
+      <p>Recent advances in physical 3D generation have enabled visually faithful assets with simulatable mechanical behavior. However, existing methods provide limited control over material behavior beyond appearance-based inference and struggle to estimate physical properties from complex interactions between objects and semantic parts. Therefore, we present PhysForge, a Video Diffusion Model (VDM)-based framework for addressing these challenges, comprising two complementary modules for material-controllable physical fitting and component-level interaction modeling. The first, PhysFit, leverages material-conditioned VDM dynamics as references for physical-property fitting, introducing windowed fitting to focus on material-revealing interactions and Hallucinated Forcing to disentangle nonphysical motion hallucinated by the VDM from material responses. The second, PhysComp decomposes complex interactions into individual objects and semantic components, enabling their physical parameters to be optimized independently and flexibly composed for joint simulation. Experiments on PhysAssets and Google Scanned Objects demonstrate that, compared with existing methods, PhysForge provides stronger control over material-dependent physical responses while supporting component-level physical modeling for complex interactions. It achieves the best CLIP and physical controllability scores on both common and uncommon materials, with qualitative comparisons, component-level ablations, and a user study further supporting these improvements.</p>
+    </section>
+    <section class="section wrap" id="method">
+      <div class="section-heading"><h2>Pipeline</h2></div>
+      <figure class="overview-figure"><button id="open-method" aria-label="Enlarge PhysForge method overview"><img src="../assets/PhysForge/figures/overview.webp" width="2400" height="1200" alt="PhysForge pipeline: material-conditioned video, PhysFit interaction-window selection, and PhysComp reconstruction and component-level physical fitting." loading="lazy"><span>Expand figure</span></button><figcaption>Given an input image and a target material description, PhysForge uses PhysFit to fit material properties from informative intervals of generated video dynamics while accounting for nonphysical motion, and PhysComp to reconstruct separable objects and semantic parts, estimate their physical properties independently, and compose them in a shared simulation.</figcaption></figure>
+    </section>
+
+    <section class="comparison-section" id="comparisons"><div class="wrap">
+      <div class="section-heading"><h2>Comparisons</h2></div>
+      <h3 id="qualitative-title">Qualitative results</h3>
+      <div class="comparison-tabs" id="comparison-tabs" role="group" aria-label="Choose comparison case"><button data-case="material/101" aria-pressed="true"><span>Apple</span></button><button data-case="material/115" aria-pressed="false"><span>Tripod stand</span></button><button data-case="components/001" aria-pressed="false"><span>Pillow &amp; beanbag</span></button></div>
+      <div class="comparison-panel"><div class="comparison-heading"><div id="comparison-materials" class="pills" role="group" aria-label="Comparison material"></div></div>
+        <div class="comparison-scroll" tabindex="0" aria-label="Seven-method comparison, scroll horizontally on narrow screens"><div class="comparison-grid" id="comparison-grid"></div></div>
+        <div class="comparison-controls"><button class="button primary" id="comparison-play">Play all</button><button class="plain-button" id="comparison-reset">Reset</button><input id="comparison-seek" type="range" min="0" max="5" step="0.01" value="0" aria-label="Comparison playback time"><output id="comparison-time">0.0 / 5.0 s</output></div>
+        <p class="media-error" id="comparison-error" hidden>Some videos could not play. You can open each video clip using its method label.</p>
+      </div>
+      <section class="quantitative" aria-labelledby="quantitative-title"><h3 id="quantitative-title">Quantitative results</h3><div class="table-scroll"><table><caption>CLIP alignment and physical controllability (PC). Higher is better; PC is rated by a VLM on a five-point scale.</caption><thead><tr><th rowspan="2" scope="col">Method</th><th colspan="2" scope="colgroup">Common materials</th><th colspan="2" scope="colgroup">Uncommon materials</th></tr><tr><th scope="col">CLIP ↑</th><th scope="col">PC ↑</th><th scope="col">CLIP ↑</th><th scope="col">PC ↑</th></tr></thead><tbody><tr><th scope="row">DreamPhysics</th><td>0.250</td><td>3.2</td><td>0.248</td><td>2.6</td></tr><tr><th scope="row">PSIVG</th><td>0.233</td><td>2.0</td><td>0.241</td><td>1.8</td></tr><tr><th scope="row">PhysRVG</th><td>0.243</td><td>3.8</td><td>0.232</td><td>3.0</td></tr><tr><th scope="row">WMReward</th><td>0.246</td><td>4.4</td><td>0.244</td><td>2.6</td></tr><tr><th scope="row">DeforM</th><td>0.242</td><td>4.4</td><td>0.235</td><td>3.2</td></tr><tr><th scope="row">PhysGM</th><td>0.246</td><td>3.8</td><td>0.247</td><td>1.8</td></tr><tr class="table-ours"><th scope="row">PhysForge</th><td>0.258</td><td>4.6</td><td>0.264</td><td>4.0</td></tr></tbody></table></div></section>
+    </div></section>
+
+    <section class="section wrap" id="gallery"><div class="section-heading"><h2>Material-Controllable</h2></div><p class="gallery-description">PhysForge simulations under different material conditions; compare deformation and motion for the same object as the selected material changes.</p>
+      <div class="gallery-toolbar"><div id="gallery-filters" class="pills" role="group" aria-label="Filter material gallery"><button data-filter="all" aria-pressed="true">All</button><button data-filter="solid" aria-pressed="false">Solids</button><button data-filter="sand" aria-pressed="false">Sand</button><button data-filter="liquid" aria-pressed="false">Liquids</button></div><span id="gallery-count" aria-live="polite"></span></div>
+      <div id="material-gallery" class="gallery-grid"></div><div class="more-row"><button class="button secondary" id="material-more">Show more</button><button class="button secondary" id="material-less" hidden>Show less</button></div>
+    </section>
+
+    <section class="components-section" id="components"><div class="wrap"><div class="section-heading"><h2>Component-Separable</h2></div><p class="gallery-description">PhysForge simulations of objects and semantic parts with independently estimated physical properties; observe their relative motion and contact during joint simulation.</p><div id="component-gallery" class="gallery-grid component-grid"></div><div class="more-row"><button class="button secondary" id="component-more">Show all scenes</button></div></div></section>
+  </main>
+  <noscript><p class="wrap">Enable JavaScript to play videos and switch materials.</p></noscript>
+  <dialog id="method-dialog" aria-label="PhysForge method overview"><button class="dialog-close" id="close-method" aria-label="Close figure">Close</button><img src="../assets/PhysForge/figures/overview.webp" alt="Enlarged PhysForge method overview"></dialog>
+</body>
+</html>

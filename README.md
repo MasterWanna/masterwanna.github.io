@@ -1,30 +1,34 @@
 # Personal website
 
-Hosted at https://masterwanna.github.io/ using GitHub Pages.
-The root home page is intentionally blank.
-
 ## Structure
 
-- `index.html`: blank home page.
-- `PhysForge.html`: PhysForge project page.
-- `PhysForge/assets/`: self-contained styles, scripts, figures, videos, and posters.
-- `.nojekyll`: publish the static files directly.
+```text
+HomePage/
+├── index.html
+├── pages/
+│   └── PhysForge.html
+├── assets/
+│   └── PhysForge/
+│       ├── css/
+│       ├── js/
+│       ├── figures/
+│       ├── media/
+│       └── posters/
+└── .nojekyll
+```
 
-The paper page is available at https://masterwanna.github.io/PhysForge.html.
+`index.html` is the blank home page. The project page is `pages/PhysForge.html`;
+its resource URLs begin with `../assets/PhysForge/`.
 
 ## Local preview
 
-From this directory, run `python3 -m http.server 8000`, then open
-http://localhost:8000/PhysForge.html.
+Run `python3 -m http.server 8000` from this directory and open
+http://localhost:8000/pages/PhysForge.html.
 
-## Editing and publishing
+## GitHub Pages
 
-Edit project content in `PhysForge.html`, presentation in
-`PhysForge/assets/css/style.css`, and author / arXiv and GitHub links in
-`PhysForge/assets/js/site-config.js`. Video and material mappings are in
-`PhysForge/assets/js/gallery-data.js`.
-All asset URLs are relative to the root HTML file and begin with `PhysForge/assets/`.
+The publishing source remains `main` / `/(root)`.
+After publication, the project URL is https://masterwanna.github.io/pages/PhysForge.html.
+There is no root `PhysForge.html`, redirect, or compatibility route.
 
-GitHub Pages publishes the `main` branch from `/(root)`.
-Use the configured `git up "Describe your changes"` command to publish updates.
-Keep large source data and local QA output outside the published files.
+These changes are local only and have not been published.
