@@ -79,3 +79,5 @@ a.release-button[href]:hover{background:#dce3e6;border-color:#abb9bf;color:#3446
 @media(max-width:720px){.site-header{flex-direction:column;align-items:flex-start;gap:8px}.site-header nav{justify-content:flex-start;gap:0 16px;font-size:12px}}
 
 .single-play:disabled,#comparison-play:disabled{background:#e2e7e9;color:#7b898f;border-color:#d5dde0;cursor:default;opacity:1}
+
+.single-seek:disabled,#comparison-seek:disabled{accent-color:#a6b1b6;cursor:default;opacity:.5}
