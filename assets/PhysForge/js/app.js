@@ -43,7 +43,6 @@ function bindSinglePlayer(video,controls,onError){
 }
 document.querySelectorAll('[data-arxiv]').forEach(a=>{if(CONFIG.arxivUrl){a.href=CONFIG.arxivUrl;a.removeAttribute('aria-disabled');a.querySelector('span').textContent='Paper';}});
 document.querySelectorAll('[data-code]').forEach(a=>a.href=CONFIG.codeUrl);
-if(CONFIG.authors.length){$('authors').replaceChildren(...CONFIG.authors.flatMap((a,i)=>{const e=document.createElement(a.url?'a':'span');e.textContent=a.name+(a.affiliation?' · '+a.affiliation:'');if(a.url)e.href=a.url;return i?[document.createTextNode(' / '),e]:[e];}));}
 let heroCase='material/001',heroKind=byKey(heroCase).conditions[0].kind,heroGeneration=0;
 const hero=$('hero-video');
 function setHero(key,kind){
