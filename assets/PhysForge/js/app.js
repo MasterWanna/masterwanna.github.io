@@ -3,6 +3,7 @@ const DATA=window.PHYSFORGE_DATA, CONFIG=window.PHYSFORGE_CONFIG;
 const byKey=key=>DATA.cases.find(c=>c.key===key), $=id=>document.getElementById(id);
 const escapeHTML=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const singlePlayers=new WeakMap();
+const canPlay=video=>video.readyState>=HTMLMediaElement.HAVE_FUTURE_DATA&&!video.error;
 function bindSinglePlayer(video,controls,onError){
   const play=controls.querySelector('.single-play'),reset=controls.querySelector('.single-reset');
   const seek=controls.querySelector('.single-seek'),time=controls.querySelector('.single-time');
@@ -12,6 +13,7 @@ function bindSinglePlayer(video,controls,onError){
     const duration=Number.isFinite(video.duration)?video.duration:Number(video.dataset.duration)||5;
     const current=Math.min(video.currentTime||0,duration);
     play.textContent=video.paused||video.ended?'Play':'Pause';
+    play.disabled=(video.paused||video.ended)&&!canPlay(video);
     play.setAttribute('aria-label',play.textContent+' '+video.getAttribute('aria-label'));
     seek.max=duration;seek.value=current;
     time.textContent=`${current.toFixed(1)} / ${duration.toFixed(1)} s`;
@@ -25,6 +27,7 @@ function bindSinglePlayer(video,controls,onError){
   }
   play.addEventListener('click',()=>{
     if(!video.paused&&!video.ended){video.pause();return;}
+    if(!canPlay(video))return;
     if(video.ended)moveTo(0);
     video.play().catch(onError);
   });
@@ -32,7 +35,7 @@ function bindSinglePlayer(video,controls,onError){
   seek.addEventListener('input',()=>moveTo(Number(seek.value)));
   video.addEventListener('play',()=>{cancelAnimationFrame(frame);tick();});
   ['pause','ended'].forEach(event=>video.addEventListener(event,stop));
-  ['loadedmetadata','timeupdate','seeked','emptied'].forEach(event=>video.addEventListener(event,refresh));
+  ['loadstart','loadedmetadata','loadeddata','canplay','canplaythrough','waiting','stalled','timeupdate','seeking','seeked','emptied','error'].forEach(event=>video.addEventListener(event,refresh));
   video.addEventListener('error',onError);
   singlePlayers.set(video,{refresh,dispose(){++seekVersion;video.pause();stop();}});
   refresh();
@@ -66,7 +69,9 @@ function comparisonRefresh(){
   const time=Math.max(...comparisonVideos.map(v=>v.currentTime),0);
   $('comparison-seek').max=max;$('comparison-seek').value=Math.min(time,max);
   $('comparison-time').textContent=`${time.toFixed(1)} / ${max.toFixed(1)} s`;
-  $('comparison-play').textContent=comparisonVideos.some(v=>!v.paused&&!v.ended)?'Pause all':'Play all';
+  const playing=comparisonVideos.some(v=>!v.paused&&!v.ended);
+  $('comparison-play').textContent=playing?'Pause all':'Play all';
+  $('comparison-play').disabled=!playing&&(!comparisonVideos.length||!comparisonVideos.every(canPlay));
 }
 function comparisonTick(){comparisonRefresh();comparisonFrame=comparisonVideos.some(v=>!v.paused&&!v.ended)?requestAnimationFrame(comparisonTick):0;}
 function pauseComparison(){comparisonVideos.forEach(v=>v.pause());cancelAnimationFrame(comparisonFrame);comparisonFrame=0;comparisonRefresh();}
@@ -78,13 +83,11 @@ function setComparison(key,kind){
   $('comparison-materials').innerHTML=c.conditions.length>1?c.conditions.map(x=>`<button data-kind="${x.kind}" aria-pressed="${x.kind===condition.kind}">${escapeHTML(x.label)}</button>`).join(''):`<button data-kind="${condition.kind}" aria-pressed="true">${c.section==='components'?'Components':escapeHTML(condition.label)}</button>`;
   $('comparison-materials').hidden=false;
   document.querySelectorAll('#comparison-tabs button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.case===key)));
-  $('comparison-grid').innerHTML=DATA.methods.map(m=>{const v=condition.videos[m.id];return `<article class="method-card ${m.id==='ours'?'ours':''}"><a class="method-name" href="${v.src}" target="_blank" rel="noopener" title="Open ${m.name} video clip">${m.id==='ours'?'PhysForge':m.name}</a><video muted playsinline preload="none" src="${v.src}" poster="${v.poster}" data-duration="${v.duration}" aria-label="${escapeHTML(c.name+', '+condition.label+', '+m.name)}"></video></article>`;}).join('');
+  $('comparison-grid').innerHTML=DATA.methods.map(m=>{const v=condition.videos[m.id];return `<article class="method-card ${m.id==='ours'?'ours':''}"><a class="method-name" href="${v.src}" target="_blank" rel="noopener" title="Open ${m.name} video clip">${m.id==='ours'?'PhysForge':m.name}</a><video muted playsinline preload="auto" src="${v.src}" poster="${v.poster}" data-duration="${v.duration}" aria-label="${escapeHTML(c.name+', '+condition.label+', '+m.name)}"></video></article>`;}).join('');
   comparisonVideos=[...$('comparison-grid').querySelectorAll('video')];
-  $('comparison-error').hidden=true;
   comparisonVideos.forEach(v=>{
-    ['loadedmetadata','timeupdate','pause','ended'].forEach(event=>v.addEventListener(event,comparisonRefresh));
+    ['loadstart','loadedmetadata','loadeddata','canplay','canplaythrough','waiting','stalled','emptied','error','seeking','seeked','timeupdate','pause','ended'].forEach(event=>v.addEventListener(event,comparisonRefresh));
     v.addEventListener('play',()=>{if(!comparisonFrame)comparisonFrame=requestAnimationFrame(comparisonTick);});
-    v.addEventListener('error',()=>{$('comparison-error').hidden=false;});
   });
   comparisonRefresh();
 }
@@ -92,10 +95,13 @@ $('comparison-tabs').addEventListener('click',e=>{const b=e.target.closest('butt
 $('comparison-materials').addEventListener('click',e=>{const b=e.target.closest('button[data-kind]');if(b)setComparison(comparisonKey,b.dataset.kind);});
 $('comparison-play').addEventListener('click',async()=>{
   if(comparisonVideos.some(v=>!v.paused&&!v.ended)){pauseComparison();return;}
+  if(!comparisonVideos.length||!comparisonVideos.every(canPlay))return;
   if(comparisonVideos.every(v=>v.ended))comparisonVideos.forEach(v=>v.currentTime=0);
   const generation=comparisonGeneration;
   const results=await Promise.allSettled(comparisonVideos.filter(v=>!v.ended).map(v=>v.play()));
-  if(generation===comparisonGeneration&&results.some(r=>r.status==='rejected'))$('comparison-error').hidden=false;
+  if(generation!==comparisonGeneration)return;
+  if(results.some(r=>r.status==='rejected'))pauseComparison();
+  comparisonRefresh();
 });
 $('comparison-reset').addEventListener('click',()=>{pauseComparison();comparisonVideos.forEach(v=>{v.currentTime=0;});comparisonRefresh();});
 $('comparison-seek').addEventListener('input',e=>{
@@ -114,7 +120,7 @@ let materialFilter='all',materialLimit=8,componentLimit=6;
 const galleryObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(!entry.isIntersecting)entry.target.pause();}),{threshold:.05});
 function cardHTML(c){
   const condition=c.conditions[0],v=condition.videos.ours;
-  return `<article class="result-card" data-key="${c.key}"><div class="result-media"><video muted playsinline preload="metadata" src="${v.src}" poster="${v.poster}" aria-label="${escapeHTML(c.name+', '+condition.label+', PhysForge')}"></video></div><div class="single-controls"><button type="button" class="single-play card-play" aria-label="Play ${escapeHTML(c.name)} simulation">Play</button><button type="button" class="single-reset" aria-label="Reset ${escapeHTML(c.name)} simulation">Reset</button><output class="single-time">0.0 / ${v.duration.toFixed(1)} s</output><input class="single-seek" type="range" min="0" max="${v.duration}" step="0.01" value="0" aria-label="${escapeHTML(c.name)} playback time"></div><div class="result-info"><h3>${escapeHTML(c.name)}</h3>${c.section==='material'?`<div class="card-materials" role="group" aria-label="${escapeHTML(c.name+' material')}">${c.conditions.length>1?c.conditions.map(x=>`<button data-kind="${x.kind}" aria-pressed="${x.kind===condition.kind}">${escapeHTML(x.label)}</button>`).join(''):`<span class="material-static">${escapeHTML(condition.label)}</span>`}</div>`:''}</div><p class="media-error" hidden>Playback unavailable. <a href="${v.src}">Open video</a>.</p></article>`;
+  return `<article class="result-card" data-key="${c.key}"><div class="result-media"><video muted playsinline preload="auto" src="${v.src}" poster="${v.poster}" aria-label="${escapeHTML(c.name+', '+condition.label+', PhysForge')}"></video></div><div class="single-controls"><button type="button" class="single-play card-play" disabled aria-label="Play ${escapeHTML(c.name)} simulation">Play</button><button type="button" class="single-reset" aria-label="Reset ${escapeHTML(c.name)} simulation">Reset</button><output class="single-time">0.0 / ${v.duration.toFixed(1)} s</output><input class="single-seek" type="range" min="0" max="${v.duration}" step="0.01" value="0" aria-label="${escapeHTML(c.name)} playback time"></div><div class="result-info"><h3>${escapeHTML(c.name)}</h3>${c.section==='material'?`<div class="card-materials" role="group" aria-label="${escapeHTML(c.name+' material')}">${c.conditions.length>1?c.conditions.map(x=>`<button data-kind="${x.kind}" aria-pressed="${x.kind===condition.kind}">${escapeHTML(x.label)}</button>`).join(''):`<span class="material-static">${escapeHTML(condition.label)}</span>`}</div>`:''}</div><p class="media-error" hidden>Playback unavailable. <a href="${v.src}">Open video</a>.</p></article>`;
 }
 function registerCards(container){
   container.querySelectorAll('video').forEach(video=>{
